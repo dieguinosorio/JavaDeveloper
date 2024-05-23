@@ -3,8 +3,7 @@ import Banco.Domicilio;
 import Banco.Cliente;
 import Banco.*;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -68,5 +67,20 @@ public class Main {
 
         System.out.println("Cuentas actualizadas del primer cliente:");
         System.out.println(primerCliente.obtenerCuentas());
+
+        //Solucion implementando Comparator
+        Collections.sort(listaClientes);
+        System.out.println("---- Imprimo los clientes ordenamos ----");
+        for (Cliente cliente : listaClientes) {
+            System.out.println(cliente.getNumero());
+        }
+
+        Collections.sort(cuentasCliente1);
+        System.out.println("---- Imprimo las cuentas ordenadas ----");
+        for (Cuenta cuenta : cuentasCliente1) {
+            System.out.println(cuenta.getSaldo());
+        }
     }
+
+
 }

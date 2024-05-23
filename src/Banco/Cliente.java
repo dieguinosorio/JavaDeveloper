@@ -4,7 +4,7 @@ import Banco.interfaces.ServiciosCuentas;
 
 import java.util.ArrayList;
 
-public class Cliente implements ServiciosCuentas {
+public class Cliente implements ServiciosCuentas, Comparable<Cliente> {
     private Integer numero;
     private String nombre;
     private Domicilio domicilio;
@@ -21,6 +21,9 @@ public class Cliente implements ServiciosCuentas {
         this.telefono = telefono;
         this.cuentas = cuentas;
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public Cliente() {
     }
 
     public Integer getNumero() {
@@ -135,5 +138,10 @@ public class Cliente implements ServiciosCuentas {
     @Override
     public ArrayList<Cuenta> obtenerCuentas() {
         return cuentas;
+    }
+
+    @Override
+    public int compareTo(Cliente otroCliente) {
+        return Integer.compare(this.getNumero(), otroCliente.getNumero());
     }
 }

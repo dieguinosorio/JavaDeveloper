@@ -1,6 +1,6 @@
 package Banco;
 
-public abstract class Cuenta {
+public abstract class Cuenta  implements Comparable<Cuenta> {
     private Integer numero;
     private String fechaApertura;
     private Double saldo;
@@ -53,5 +53,10 @@ public abstract class Cuenta {
                 ", saldo=" + saldo +
                 ", fechaCancelacion='" + fechaCancelacion + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Cuenta otraCuenta) {
+        return this.saldo.compareTo(otraCuenta.saldo);
     }
 }
