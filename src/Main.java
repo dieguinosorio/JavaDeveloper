@@ -40,5 +40,33 @@ public class Main {
         System.out.println(banco.toString());
         System.out.println("Lista de clientes del banco");
         System.out.println(banco.getClientes());
+
+
+
+        //Solucion implementando las interfaces
+
+        Banco banco2 = new Banco("Banco Test", listaDomicilios.get(2),"123", "1234-122");
+        for (Cliente cliente : listaClientes) {
+            banco2.agregarCliente(cliente);
+        }
+
+        System.out.println("Información del Banco:");
+        System.out.println(banco2.toString());
+        System.out.println("Lista de clientes del banco");
+        System.out.println(banco2.getClientes());
+
+        Cliente primerCliente = banco2.obtenerClientes().get(0);
+        System.out.println("Cuentas del primer cliente:");
+        System.out.println(primerCliente.obtenerCuentas());
+
+        Cuenta cuentaAhorroCliente1 = primerCliente.obtenerCuentas().get(0);
+        Cuenta cuentaChequeCliente1 = primerCliente.obtenerCuentas().get(1);
+
+        primerCliente.abonarCuenta(cuentaAhorroCliente1.getNumero(), 5000.0);
+
+        primerCliente.retirar(cuentaChequeCliente1.getNumero(), 200.0);
+
+        System.out.println("Cuentas actualizadas del primer cliente:");
+        System.out.println(primerCliente.obtenerCuentas());
     }
 }

@@ -1,8 +1,10 @@
 package Banco;
 
+import Banco.interfaces.ServiciosCuentas;
+
 import java.util.ArrayList;
 
-public class Cliente {
+public class Cliente implements ServiciosCuentas {
     private Integer numero;
     private String nombre;
     private Domicilio domicilio;
@@ -88,5 +90,50 @@ public class Cliente {
                 ", cuentas=" + cuentas +
                 ", fechaNacimiento='" + fechaNacimiento + '\'' +
                 '}';
+    }
+
+    @Override
+    public void agregarCuenta(Cuenta cuenta) {
+        cuentas.add(cuenta);
+    }
+
+    @Override
+    public void cancelarCuenta(int numeroCuenta) {
+        for (int i = 0; i < cuentas.size(); i++) {
+            if (cuentas.get(i).getNumero().equals(numeroCuenta)) {
+                cuentas.remove(i);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void abonarCuenta(int numeroCuenta, double monto) {
+        for (Cuenta cuenta : cuentas) {
+            if (cuenta.getNumero().equals(numeroCuenta)) {
+                cuenta.setSaldo(cuenta.getSaldo() + monto);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void retirar(int numeroCuenta, double monto) {
+        for (Cuenta cuenta : cuentas) {
+            if (cuenta.getNumero().equals(numeroCuenta)) {
+                double saldoActual = cuenta.getSaldo();
+                if (saldoActual >= monto) {
+                    cuenta.setSaldo(saldoActual - monto);
+                } else {
+                    System.out.println("No hay suficientes fondos para retirar.");
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public ArrayList<Cuenta> obtenerCuentas() {
+        return cuentas;
     }
 }

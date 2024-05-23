@@ -1,8 +1,10 @@
 package Banco;
 
+import Banco.interfaces.ServiciosClientes;
+
 import java.util.ArrayList;
 
-public class Banco {
+public class Banco implements ServiciosClientes {
     private String nombre;
     private Domicilio domicilio;
     private String rfc;
@@ -15,6 +17,7 @@ public class Banco {
         this.domicilio = domicilio;
         this.rfc = rfc;
         this.telefono = telefono;
+        this.clientes = new ArrayList<>();
     }
 
     public String getNombre() {
@@ -66,5 +69,45 @@ public class Banco {
                 ", telefono='" + telefono + '\'' +
                 ", clientes=" + clientes +
                 '}';
+    }
+
+    @Override
+    public void agregarCliente(Cliente cliente) {
+        clientes.add(cliente);
+    }
+
+    @Override
+    public void eliminarCliente(int numeroCliente) {
+        for (int i = 0; i < clientes.size(); i++) {
+            if (clientes.get(i).getNumero().equals(numeroCliente)) {
+                clientes.remove(i);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public Cliente consultarCliente(int numeroCliente) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getNumero().equals(numeroCliente)) {
+                return cliente;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Cliente> obtenerClientes() {
+        return clientes;
+    }
+
+    @Override
+    public Cliente buscarClientePorRFC(String rfc) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getRfc().equals(rfc)) {
+                return cliente;
+            }
+        }
+        return null;
     }
 }
