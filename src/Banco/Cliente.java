@@ -3,6 +3,8 @@ package Banco;
 import Banco.interfaces.ServiciosCuentas;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Cliente implements ServiciosCuentas, Comparable<Cliente> {
     private Integer numero;
@@ -10,7 +12,7 @@ public class Cliente implements ServiciosCuentas, Comparable<Cliente> {
     private Domicilio domicilio;
     private String rfc;
     private String telefono;
-    private ArrayList<Cuenta> cuentas;
+    private List<Cuenta> cuentas;
     private String fechaNacimiento;
 
     public Cliente(Integer numero, String nombre, Domicilio domicilio, String rfc, String telefono, ArrayList<Cuenta> cuentas, String fechaNacimiento) {
@@ -66,8 +68,8 @@ public class Cliente implements ServiciosCuentas, Comparable<Cliente> {
         this.telefono = telefono;
     }
 
-    public ArrayList<Cuenta> getCuentas() {
-        return cuentas;
+    public List<Cuenta> getCuentas() {
+        return cuentas.stream().collect(Collectors.toList());
     }
 
     public void setCuentas(ArrayList<Cuenta> cuentas) {
@@ -102,42 +104,37 @@ public class Cliente implements ServiciosCuentas, Comparable<Cliente> {
 
     @Override
     public void cancelarCuenta(int numeroCuenta) {
-        for (int i = 0; i < cuentas.size(); i++) {
-            if (cuentas.get(i).getNumero().equals(numeroCuenta)) {
-                cuentas.remove(i);
-                break;
-            }
-        }
+        cuentas = cuentas.stream()
+                .filter(cuenta -> !cuenta.getNumero().equals(numeroCuenta))
+                .collect(Collectors.toList());
     }
 
     @Override
     public void abonarCuenta(int numeroCuenta, double monto) {
-        for (Cuenta cuenta : cuentas) {
-            if (cuenta.getNumero().equals(numeroCuenta)) {
-                cuenta.setSaldo(cuenta.getSaldo() + monto);
-                break;
-            }
-        }
+        cuentas.stream()
+                .filter(cuenta -> cuenta.getNumero().equals(numeroCuenta))
+                .findFirst()
+                .ifPresent(cuenta -> cuenta.setSaldo(cuenta.getSaldo() + monto));
     }
 
     @Override
     public void retirar(int numeroCuenta, double monto) {
-        for (Cuenta cuenta : cuentas) {
-            if (cuenta.getNumero().equals(numeroCuenta)) {
-                double saldoActual = cuenta.getSaldo();
-                if (saldoActual >= monto) {
-                    cuenta.setSaldo(saldoActual - monto);
-                } else {
-                    System.out.println("No hay suficientes fondos para retirar.");
-                }
-                break;
-            }
-        }
+        cuentas.stream()
+                .filter(cuenta -> cuenta.getNumero().equals(numeroCuenta))
+                .findFirst()
+                .ifPresent(cuenta -> {
+                    double saldoActual = cuenta.getSaldo();
+                    if (saldoActual >= monto) {
+                        cuenta.setSaldo(saldoActual - monto);
+                    } else {
+                        System.out.println("No hay suficientes fondos para retirar.");
+                    }
+                });
     }
 
     @Override
-    public ArrayList<Cuenta> obtenerCuentas() {
-        return cuentas;
+    public List<Cuenta> obtenerCuentas() {
+        return cuentas.stream().collect(Collectors.toList());
     }
 
     @Override

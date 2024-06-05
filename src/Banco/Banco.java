@@ -3,6 +3,8 @@ package Banco;
 import Banco.interfaces.ServiciosClientes;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Banco implements ServiciosClientes {
     private String nombre;
@@ -10,7 +12,7 @@ public class Banco implements ServiciosClientes {
     private String rfc;
     private String telefono;
 
-    private ArrayList<Cliente> clientes;
+    private List<Cliente> clientes;
 
     public Banco(String nombre, Domicilio domicilio, String rfc, String telefono) {
         this.nombre = nombre;
@@ -52,7 +54,7 @@ public class Banco implements ServiciosClientes {
         this.telefono = telefono;
     }
 
-    public ArrayList<Cliente> getClientes() {
+    public List<Cliente> getClientes() {
         return clientes;
     }
 
@@ -78,36 +80,29 @@ public class Banco implements ServiciosClientes {
 
     @Override
     public void eliminarCliente(int numeroCliente) {
-        for (int i = 0; i < clientes.size(); i++) {
-            if (clientes.get(i).getNumero().equals(numeroCliente)) {
-                clientes.remove(i);
-                break;
-            }
-        }
+        clientes = clientes.stream()
+                .filter(cliente -> !cliente.getNumero().equals(numeroCliente))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Cliente consultarCliente(int numeroCliente) {
-        for (Cliente cliente : clientes) {
-            if (cliente.getNumero().equals(numeroCliente)) {
-                return cliente;
-            }
-        }
-        return null;
+        return clientes.stream()
+                .filter( cliente -> cliente.getNumero().equals(numeroCliente))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
-    public ArrayList<Cliente> obtenerClientes() {
+    public List<Cliente> obtenerClientes() {
         return clientes;
     }
 
     @Override
     public Cliente buscarClientePorRFC(String rfc) {
-        for (Cliente cliente : clientes) {
-            if (cliente.getRfc().equals(rfc)) {
-                return cliente;
-            }
-        }
-        return null;
+        return clientes.stream()
+                .filter( cliente -> cliente.getRfc().equals(rfc))
+                .findFirst()
+                .orElse(null);
     }
 }
