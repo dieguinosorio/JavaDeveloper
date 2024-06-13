@@ -2,11 +2,14 @@ import Banco.Banco;
 import Banco.Domicilio;
 import Banco.Cliente;
 import Banco.*;
+import Banco.services.ClienteService;
 
+import java.sql.*;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+        ClienteService clienteDao = new ClienteService();
         ArrayList<Domicilio> listaDomicilios = new ArrayList<>();
         listaDomicilios.add(new Domicilio("Calle 32", 10, "colonia 1", "Estado 1", 50001));
         listaDomicilios.add(new Domicilio("Calle 33", 11, "colonia 2", "Estado 3", 50003));
@@ -28,9 +31,8 @@ public class Main {
         cuentasCliente2.add(listaCuentasAhorro.get(1));
         cuentasCliente2.add(listaCuentasCheque.get(1));
 
-        ArrayList<Cliente> listaClientes = new ArrayList<>();
-        listaClientes.add(new Cliente(1, "Pepito", listaDomicilios.get(0), "001", "12345", cuentasCliente1, "1992-01-01"));
-        listaClientes.add(new Cliente(2, "Jaime", listaDomicilios.get(1), "002", "12345", cuentasCliente2, "1993-01-01"));
+        //Obtenemos los clientes de la BD
+        List<Cliente> listaClientes = clienteDao.obtenerClientes();
 
         Banco banco = new Banco("Banco Test", listaDomicilios.get(2), "123", "1234-122");
         banco.setClientes(listaClientes);
@@ -72,5 +74,22 @@ public class Main {
         Collections.sort(cuentasCliente1);
         System.out.println("---- Imprimo las cuentas ordenadas ----");
         cuentasCliente1.forEach(cuenta -> System.out.println(cuenta.getSaldo()));
+    }
+
+    public static void cargarClientes() {
+        String url = "jdbc:mysql://localhost:3306/banco";
+        String user = "root";
+        String password = "admin1234";
+
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM clientes");
+
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("columnname"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
